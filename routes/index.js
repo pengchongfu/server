@@ -12,6 +12,21 @@ router.get('/resume',function(req,res,next){
   res.sendFile(path.join(__dirname, '../public', 'resume.html'));
 });
 
+router.get('/els',function(req,res,next){
+  res.sendFile(path.join(__dirname, '../public', 'els.html'));
+});
+
+router.get('/map',function(req,res,next){
+  res.sendFile(path.join(__dirname, '../public', 'map.html'));
+});
+
+router.get('/saolei',function(req,res,next){
+  res.sendFile(path.join(__dirname, '../public', 'saolei.html'));
+});
+
+router.get('/tcs',function(req,res,next){
+  res.sendFile(path.join(__dirname, '../public', 'tcs.html'));
+});
 
 router.post('/',function(req,res,next){
   res.json("ok");

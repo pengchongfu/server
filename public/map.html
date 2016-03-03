@@ -1,0 +1,260 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<title>拼图游戏</title>
+<style>
+* {
+	background-color:white;
+}
+
+button {
+	background-color:rgb(169, 169, 169);
+}
+
+#canvas {
+	position:absolute;
+	left:200px;
+	top:150px;
+	height:450px;
+	width:450px;
+	border-style:solid;
+	border-width:1px;
+}
+
+#canvas b {
+	font-size:75px;
+	text-align:center;
+	position:absolute;
+	height:148px;
+	width:148px;
+	line-height:148px;
+	border-style:solid;
+	border-width:1px;
+}
+
+</style>
+</head>
+<body>
+<p>键盘：方向键控制黑色方块，使得方块从左到右从上到下按1~8排列，黑色方块位于右下角</p>
+<p>触屏：滑动屏幕控制黑色方块</p>
+<p>PS：已对可能出现的“<a href="http://baike.baidu.com/link?url=5220tdFlDT4adW42-05YGb6GzleSq40hyZPoUaewWdM8b8uBkQ40u5JTj4X0Yi2ch-hm9JE9tiAlSsivpeAYba" target="_blank">不可还原拼图</a>”进行检查排除</p>
+<button id="restart" onclick="init()">重新开始</button>
+
+<div id="canvas"></div>
+
+<script>
+var square=new Array(9);//定义9个方块
+var rl=new Array(9);//定义随机生成的排列
+var squares=document.getElementById("canvas");//获取画布
+for(var i=0;i<9;i++){
+	square[i]=document.createElement("b");
+	square[i].innerHTML=i;
+	squares.appendChild(square[i]);
+}
+//定义方块的颜色
+square[0].style.backgroundColor="#000000";
+square[1].style.backgroundColor="#00ff00";
+square[2].style.backgroundColor="#0000ff";
+square[3].style.backgroundColor="#ffff00";
+square[4].style.backgroundColor="#ff00ff";
+square[5].style.backgroundColor="#00ffff";
+square[6].style.backgroundColor="#a0a0a0";
+square[7].style.backgroundColor="#ffffff";
+square[8].style.backgroundColor="#ff0000";
+
+var button=document.getElementById("restart");
+init();
+document.onkeydown=keyDown;//键盘监听事件
+
+/*初始化函数*/
+function init(){
+	do{
+	for(var i=0;i<9;i++){
+		while(true){
+			var ok=1;
+			var r=Math.floor(Math.random()*9);
+			for(var j=0;j<i;j++){
+				if(rl[j]==r){
+					ok=0;
+				}
+			}
+			if(ok==1){
+				break;
+			}
+		}
+		rl[i]=r;
+	}}
+	while(valid());
+	
+	for(var i=0;i<9;i++){
+		
+		square[rl[i]].pos=i;
+                square[rl[i]].style.top=Math.floor(square[rl[i]].pos/3)*150+"px";
+                square[rl[i]].style.left=(square[rl[i]].pos%3)*150+"px";
+	}
+	button.focus();
+	button.blur();
+}
+/*为了防止出现不可还原拼图，采用一下函数进行检查
+参见百度百科：不可还原的拼图*/
+function valid(){
+	var num=0;
+	var val=0;
+	for(var i=0;i<9;i++){
+		if(rl[i]==0){
+			val=i;
+		}
+		for(var j=i+1;j<9;j++){
+			if(rl[i]>rl[j]){
+				num+=1;
+			}
+		}
+	}
+
+	num=num+val;
+	return num%2;
+}
+
+
+/*交换两个方块*/
+function swap(square1,square2){
+	var tmp=square1.pos;
+	square1.pos=square2.pos;
+	square2.pos=tmp;
+	square1.style.top=Math.floor(square1.pos/3)*150+"px";
+	square1.style.left=(square1.pos%3)*150+"px";
+	square2.style.top=Math.floor(square2.pos/3)*150+"px";
+	square2.style.left=(square2.pos%3)*150+"px";
+}
+
+/*键盘监听事件函数*/
+function keyDown(){
+	var value=event.keyCode;
+	switch(value){
+		case 37:
+			l();
+		break;
+		case 38:
+			u();
+		break;
+		case 39:
+			r();
+		break;
+		case 40:
+			d();
+		break;
+		}
+		check();
+}
+
+function l(){
+		if(square[0].pos%3!=0){
+			for(var i=0;i<9;i++){
+				if(square[i].pos==square[0].pos-1)
+				{
+					swap(square[0],square[i]);
+					break;
+				}
+			}
+		}	
+}
+function u(){
+		if(square[0].pos>=3){
+			for(var i=0;i<9;i++){
+				if(square[i].pos==square[0].pos-3)
+				{
+					swap(square[0],square[i]);
+					break;
+				}
+			}
+		}
+}
+function r(){
+		if(square[0].pos%3!=2){
+			for(var i=0;i<9;i++){
+				if(square[i].pos==square[0].pos+1)
+				{
+					swap(square[0],square[i]);
+					break;
+				}
+			}
+		}	
+}
+function d(){
+		if(square[0].pos<6){
+			for(var i=0;i<9;i++){
+				if(square[i].pos==square[0].pos+3)
+				{
+					swap(square[0],square[i]);
+					break;
+				}
+			}
+		}
+}
+
+
+/*检查是否成功*/
+function check(){
+	for(var i=0;i<9;i++)
+	{
+		if((square[i].pos+1)%9!=i){
+			return;
+		}
+	}
+	alert("bingo!");
+	return;
+}
+
+function direction(){
+	var startx;
+	var starty;
+	var endx;
+	var endy;
+	var dir;
+	var x;
+	var y;
+	document.addEventListener('touchstart',touch,false);
+	document.addEventListener('touchend',touch,false);
+	function touch(event){
+		var event=event||window.event;
+		switch(event.type){
+			case "touchstart":
+				startx=Number(event.touches[0].clientX);
+				starty=Number(event.touches[0].clientY);
+				break;
+			case "touchend":
+				endx=Number(event.changedTouches[0].clientX);
+				endy=Number(event.changedTouches[0].clientY);
+				x=endx-startx;
+				y=endy-starty;
+if(x==0&&y==0){return;}
+				if(Math.abs(x)>=Math.abs(y)){
+					if(x>=0){
+						r();
+					}
+					else {
+						l();
+					}
+				}
+				else {
+					if(y>=0){
+						d();
+					}
+					else {
+						u();
+					}
+				}
+
+				check();
+				break;
+		}
+	}
+}
+window.addEventListener('load',direction,false);
+document.addEventListener('touchmove',function (event){
+event.preventDefault();},false);
+
+
+</script>
+</body>
+</html>
