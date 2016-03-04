@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 var nodemailer=require('nodemailer');
 var path=require("path");
+var fs=require("fs");
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -26,6 +27,16 @@ router.get('/saolei',function(req,res,next){
 
 router.get('/tcs',function(req,res,next){
   res.sendFile(path.join(__dirname, '../public', 'tcs.html'));
+});
+
+router.get('/music',function(req,res,next){
+  res.sendFile(path.join(__dirname,'../public','music.html'));
+});
+
+router.post('/music',function(req,res,next){
+  fs.readdir('../public/music',function(err,files){
+    res.json(files);
+  });
 });
 
 router.post('/',function(req,res,next){

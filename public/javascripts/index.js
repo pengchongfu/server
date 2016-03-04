@@ -55,10 +55,11 @@ send.click(function(){
                 useremail.val("");
                 username.val("");
                 usercontent.val("");
-                $("span").text("邮件成功发送");
+                $("span").text("邮件发送成功");
                 setTimeout(function(){
                     $("span").text("");
                     emaildiv.css("display","none");
+                    svgdiv.css("display","block");
                 },1000)
 
             }
