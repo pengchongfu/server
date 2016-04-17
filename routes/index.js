@@ -45,7 +45,7 @@ router.post('/',function(req,res,next){
   var username=req.body.username;
   var usercontent=req.body.usercontent;
 
-  var user="pengchongfu@126.com",pass="";
+  var user="",pass="";
   var smtpTransport = nodemailer.createTransport({
     service:"126",
     auth:{
