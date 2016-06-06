@@ -29,6 +29,10 @@ router.get('/tcs',function(req,res,next){
   res.sendFile(path.join(__dirname, '../public', 'tcs.html'));
 });
 
+router.get('/tap-raser',function(req,res,next){
+  res.sendFile(path.join(__dirname, '../public', 'tap-raser.html'));
+});
+
 router.get('/music',function(req,res,next){
   res.sendFile(path.join(__dirname,'../public','music.html'));
 });
